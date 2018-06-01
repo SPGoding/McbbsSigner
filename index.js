@@ -40,10 +40,10 @@ function dataURLtoFile(dataurl, filename) {
     return new File([u8arr], filename, { type: mime })
 }
 
+$('#test').ready(function() {
 /*
  * 绘制canvas
  */
-$(document).ready(function() {
     let now = new Date()
     let c = document.getElementById('myCanvas')
     let img = document.getElementById('myImage')
@@ -54,18 +54,22 @@ $(document).ready(function() {
     context.drawImage(img, 0, 0, 285, 267)
     context.font = '48px 微软雅黑'
     context.fillText(now, 0, 48)
-})
+    
+/*
+ * 网页
+ */
+    xmlHttp = new XMLHttpRequest()
+    xmlHttp.open('GET', 'http://www.mcbbs.net/home.php?mod=task&do=apply&id=10', true)
+    xmlHttp.send(null)
 
 /*
  * POST图片文件并取得链接
  */
-$('#post').click(function() {
     let c = document.getElementById('myCanvas')
 
     let url = c.toDataURL('image/png')
     let file = dataURLtoFile(url, 'signImage.png')
 
-    xmlHttp = new XMLHttpRequest()
     xmlHttp.onreadystatechange = function() {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             let json = eval('(' + xmlHttp.responseText + ')')
