@@ -40,14 +40,14 @@ function dataURLtoFile(dataurl, filename) {
     return new File([u8arr], filename, { type: mime })
 }
 
-$('#test').ready(function() {
-/*
- * 绘制canvas
- */
+$('#test').click(function() {
+    /*
+     * 绘制canvas
+     */
     let now = new Date()
-    let c = document.getElementById('myCanvas')
+    let canvas = document.getElementById('myCanvas')
     let img = document.getElementById('myImage')
-    let context = c.getContext('2d')
+    let context = canvas.getContext('2d')
 
     now = now.format('MM.dd.yyyy')
 
@@ -55,36 +55,28 @@ $('#test').ready(function() {
     context.font = '48px 微软雅黑'
     context.fillText(now, 0, 48)
     
-/*
- * 网页
- */
-    xmlHttp = new XMLHttpRequest()
-    xmlHttp.open('GET', 'http://www.mcbbs.net/home.php?mod=task&do=apply&id=10', true)
-    xmlHttp.send(null)
-
-/*
- * POST图片文件并取得链接
- */
-    let c = document.getElementById('myCanvas')
-
-    let url = c.toDataURL('image/png')
+    /*
+     * POST图片文件并取得链接
+     */
+    let url = canvas.toDataURL('image/png')
     let file = dataURLtoFile(url, 'signImage.png')
-
-    xmlHttp.onreadystatechange = function() {
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-            let json = eval('(' + xmlHttp.responseText + ')')
-            if (json.code == 'success') {
-                $('#result').text(`[img]${json.data.url}[/img]`)
-            } else {
-                alert('Upload error: ' + json.msg)
-            }
-        }
-    }
-    xmlHttp.open('POST', 'https://sm.ms/api/upload', true)
 
     let fd = new FormData()
     fd.append('smfile', file)
     fd.append('ssl', true)
-    xmlHttp.send(fd)
+
     $('#result').text('Uploading...')
+
+    $.post('https://sm.ms/api/upload', fd, (data, status) => {
+        if (status === 'success') {
+            let json = eval('(' + data + ')')
+            if (json.code === 'success') {
+                $('#result').text(`[img]${json.data.url}[/img]`)
+            } else {
+                alert('Upload error: ' + json.msg)
+            }
+        } else {
+            alert('Post error.')
+        }
+    })
 })
