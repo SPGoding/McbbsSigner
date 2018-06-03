@@ -40,43 +40,54 @@ function dataURLtoFile(dataurl, filename) {
     return new File([u8arr], filename, { type: mime })
 }
 
-$('#test').click(function() {
+$('#do').click(function() {
     /*
      * 绘制canvas
      */
-    let now = new Date()
+    $('#log').text('Drawing...')
+
+    let time = new Date()
     let canvas = document.getElementById('myCanvas')
     let img = document.getElementById('myImage')
     let context = canvas.getContext('2d')
 
-    now = now.format('MM.dd.yyyy')
+    time = time.format('MM.dd.yyyy')
 
     context.drawImage(img, 0, 0, 285, 267)
     context.font = '48px 微软雅黑'
-    context.fillText(now, 0, 48)
-    
+    context.fillText(time, 0, 48)
+
+    /*
+     * 申请任务
+     */
+    $.get('http://www.mcbbs.net/home.php?mod=task&do=apply&id=10')
+    $.get('http://www.mcbbs.net/home.php?mod=task&do=apply&id=24')
+
     /*
      * POST图片文件并取得链接
      */
+    $('#log').text('Posting...')
+
     let url = canvas.toDataURL('image/png')
     let file = dataURLtoFile(url, 'signImage.png')
 
-    let fd = new FormData()
-    fd.append('smfile', file)
-    fd.append('ssl', true)
+    let formData = new FormData()
+    formData.append('smfile', file)
+    formData.append('ssl', true)
 
-    $('#result').text('Uploading...')
-
-    $.post('https://sm.ms/api/upload', fd, (data, status) => {
-        if (status === 'success') {
-            let json = eval('(' + data + ')')
-            if (json.code === 'success') {
-                $('#result').text(`[img]${json.data.url}[/img]`)
+    $.ajax({
+        url: 'https://sm.ms/api/upload',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: data => {
+            if (data.code === 'success') {
+                $('#log').text(`[img]${data.data.url}[/img]`)
             } else {
-                alert('Upload error: ' + json.msg)
+                $('#log').text('Upload error: ' + data.msg)
             }
-        } else {
-            alert('Post error.')
         }
     })
 })
