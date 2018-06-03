@@ -58,12 +58,6 @@ $('#do').click(function() {
     context.fillText(time, 0, 48)
 
     /*
-     * 申请任务
-     */
-    $.get('https://www.mcbbs.net/home.php?mod=task&do=apply&id=10')
-    $.get('https://www.mcbbs.net/home.php?mod=task&do=apply&id=24')
-
-    /*
      * POST图片文件并取得链接
      */
     $('#log').text('Posting...')
