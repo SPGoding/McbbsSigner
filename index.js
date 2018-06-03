@@ -60,8 +60,8 @@ $('#do').click(function() {
     /*
      * 申请任务
      */
-    $.get('http://www.mcbbs.net/home.php?mod=task&do=apply&id=10')
-    $.get('http://www.mcbbs.net/home.php?mod=task&do=apply&id=24')
+    $.get('https://www.mcbbs.net/home.php?mod=task&do=apply&id=10')
+    $.get('https://www.mcbbs.net/home.php?mod=task&do=apply&id=24')
 
     /*
      * POST图片文件并取得链接
