@@ -56,6 +56,8 @@ $('#do').click(function() {
     context.drawImage(img, 0, 0, 285, 267)
     context.font = '48px 微软雅黑'
     context.fillText(time, 0, 48)
+    context.font = '16px 微软雅黑'
+    context.fillText('致sm.ms：求你别删我图片了…又不违法',0,64)
 
     /*
      * POST图片文件并取得链接
