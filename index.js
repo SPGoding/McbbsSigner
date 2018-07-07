@@ -1,7 +1,7 @@
 /*
  * 格式化Date
  */
-Date.prototype.format = function(fmt) {
+Date.prototype.format = function (fmt) {
     let o = {
         'M+': this.getMonth() + 1, //月份
         'd+': this.getDate(), //日
@@ -40,50 +40,50 @@ function dataURLtoFile(dataurl, filename) {
     return new File([u8arr], filename, { type: mime })
 }
 
-$('#do').click(function() {
-    /*
-     * 绘制canvas
-     */
-    $('#log').text('Drawing...')
+$(document).ready(() => {
+    $("#time").val((new Date()).format('MM.dd.yyyy'))
 
-    let time = new Date()
-    let canvas = document.getElementById('myCanvas')
-    let img = document.getElementById('myImage')
-    let context = canvas.getContext('2d')
+    $('#do').click(function () {
+        /*
+         * 绘制canvas
+         */
+        $('#log').text('Drawing...')
 
-    time = time.format('MM.dd.yyyy')
+        let time = $("#time").value()
+        let canvas = document.getElementById('myCanvas')
+        let img = document.getElementById('myImage')
+        let context = canvas.getContext('2d')
 
-    context.drawImage(img, 0, 0, 285, 267)
-    context.font = '48px 微软雅黑'
-    context.fillText(time, 0, 48)
-    context.font = '16px 微软雅黑'
-    context.fillText('致sm.ms：求你别删我图片了…又不违法',0,64)
+        context.drawImage(img, 0, 0, 285, 267)
+        context.font = '48px 微软雅黑'
+        context.fillText(time, 0, 48)
 
-    /*
-     * POST图片文件并取得链接
-     */
-    $('#log').text('Posting...')
+        /*
+         * POST图片文件并取得链接
+         */
+        $('#log').text('Posting...')
 
-    let url = canvas.toDataURL('image/png')
-    let file = dataURLtoFile(url, 'signImage.png')
+        let url = canvas.toDataURL('image/png')
+        let file = dataURLtoFile(url, 'signImage.png')
 
-    let formData = new FormData()
-    formData.append('smfile', file)
-    formData.append('ssl', true)
+        let formData = new FormData()
+        formData.append('smfile', file)
+        formData.append('ssl', true)
 
-    $.ajax({
-        url: 'https://sm.ms/api/upload',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: data => {
-            if (data.code === 'success') {
-                $('#log').text(`[img]${data.data.url}[/img]`)
-            } else {
-                $('#log').text('Upload error: ' + data.msg)
+        $.ajax({
+            url: 'https://sm.ms/api/upload',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: data => {
+                if (data.code === 'success') {
+                    $('#log').text(`[img]${data.data.url}[/img]`)
+                } else {
+                    $('#log').text('Upload error: ' + data.msg)
+                }
             }
-        }
+        })
     })
 })
