@@ -49,7 +49,7 @@ $(document).ready(() => {
          */
         $('#log').text('Drawing...')
 
-        let time = $("#time").value()
+        let time = $("#time").val()
         let canvas = document.getElementById('myCanvas')
         let img = document.getElementById('myImage')
         let context = canvas.getContext('2d')
