@@ -1,7 +1,7 @@
 /*
  * 格式化Date
  */
-Date.prototype.format = function (fmt) {
+Date.prototype.format = function(fmt) {
     let o = {
         'M+': this.getMonth() + 1, //月份
         'd+': this.getDate(), //日
@@ -16,10 +16,7 @@ Date.prototype.format = function (fmt) {
     }
     for (let k in o) {
         if (new RegExp('(' + k + ')').test(fmt)) {
-            fmt = fmt.replace(
-                RegExp.$1,
-                RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
-            )
+            fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length))
         }
     }
     return fmt
@@ -41,15 +38,15 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 $(document).ready(() => {
-    $("#time").val((new Date()).format('MM.dd.yyyy'))
+    $('#time').val(new Date().format('MM.dd.yyyy'))
 
-    $('#do').click(function () {
+    $('#do').click(function() {
         /*
          * 绘制canvas
          */
         $('#log').text('Drawing...')
 
-        let time = $("#time").val()
+        let time = $('#time').val()
         let canvas = document.getElementById('myCanvas')
         let img = document.getElementById('myImage')
         let context = canvas.getContext('2d')
@@ -69,6 +66,7 @@ $(document).ready(() => {
         let formData = new FormData()
         formData.append('smfile', file)
         formData.append('ssl', true)
+        formData.append('format', 'json')
 
         $.ajax({
             url: 'https://sm.ms/api/upload',
@@ -82,6 +80,13 @@ $(document).ready(() => {
                     $('#log').text(`[img]${data.data.url}[/img]`)
                 } else {
                     $('#log').text('Upload error: ' + data.msg)
+                }
+            },
+            error: (obj, err) => {
+                if (err === 'parsererror') {
+                    $('#log').text('parsererror：返回信息非标准 Json 格式，图床疑似崩溃或跑路')
+                } else {
+                    $('#log').text(err)
                 }
             }
         })
